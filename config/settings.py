@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load .env dari root project (sejajar manage.py)
 load_dotenv(dotenv_path=BASE_DIR / ".env", override=True)
 
 # ----------------------------
@@ -12,8 +11,15 @@ load_dotenv(dotenv_path=BASE_DIR / ".env", override=True)
 # ----------------------------
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-insecure-change-me")
 DEBUG = os.getenv("DJANGO_DEBUG", "True").lower() == "true"
-ALLOWED_HOSTS = ["*"]
 
+RENDER_EXTERNAL_HOSTNAME = os.getenv("RENDER_EXTERNAL_HOSTNAME")
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+CSRF_TRUSTED_ORIGINS = []
+if RENDER_EXTERNAL_HOSTNAME:
+    CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_EXTERNAL_HOSTNAME}")
 # ----------------------------
 # Application definition
 # ----------------------------
@@ -24,18 +30,15 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
-    # Third-party
     "django_cleanup.apps.CleanupConfig",
     "cloudinary",
     "cloudinary_storage",
-
-    # Local apps (PASTIKAN hanya ini, jangan 'pagweb' dobel)
     "pagweb.apps.PagwebConfig",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -75,6 +78,7 @@ DATABASES = {
         "HOST": os.getenv("DB_HOST"),
         "PORT": os.getenv("DB_PORT", "5432"),
         "CONN_MAX_AGE": 60,
+        "OPTIONS": {"sslmode": "require"}, 
     }
 }
 
@@ -101,12 +105,12 @@ USE_TZ = True
 # ----------------------------
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "pagweb" / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"  # optional untuk deploy
+STATIC_ROOT = BASE_DIR / "staticfiles" 
 
 # ----------------------------
 # Media
 # ----------------------------
-MEDIA_URL = "/media/"  # penting agar admin link tidak kacau
+MEDIA_URL = "/media/" 
 
 # ----------------------------
 # Cloudinary
@@ -117,8 +121,6 @@ CLOUDINARY_STORAGE = {
     "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
 }
 
-# Ini opsional tapi sering membantu compatibility beberapa setup:
-# CLOUDINARY_URL=cloudinary://API_KEY:API_SECRET@CLOUD_NAME
 if not os.getenv("CLOUDINARY_URL"):
     cloud = os.getenv("CLOUDINARY_CLOUD_NAME")
     key = os.getenv("CLOUDINARY_API_KEY")
@@ -126,7 +128,6 @@ if not os.getenv("CLOUDINARY_URL"):
     if cloud and key and secret:
         os.environ["CLOUDINARY_URL"] = f"cloudinary://{key}:{secret}@{cloud}"
 
-# PAKAI STORAGES (lebih stabil dari DEFAULT_FILE_STORAGE di Django baru)
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
