@@ -1,0 +1,520 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Report - Pemuda Advent Wilayah 13</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --gold: #C9A770; --dark: #1A1614; --cream: #F5F1EB;
+            --charcoal: #2C2823; --accent: #8B6F47; --light-gold: #E4D4BA;
+            --white: #FFFFFF; --divider: rgba(201,167,112,0.25);
+        }
+        body {
+            background: linear-gradient(135deg, var(--cream) 0%, #EFE9E1 100%);
+            color: var(--dark); min-height: 100vh; font-family: 'Montserrat', sans-serif;
+            position: relative; overflow-x: hidden; padding-top: 90px;
+        }
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(201,167,112,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(139,111,71,0.06) 0%, transparent 50%);
+            pointer-events: none; z-index: 0;
+        }
+        body::after {
+            content: ""; position: fixed; right: 0; top: 0; width: 3px; height: 100%;
+            background: linear-gradient(180deg, var(--gold) 0%, var(--accent) 100%);
+            z-index: 100; box-shadow: -2px 0 20px rgba(201,167,112,0.3);
+        }
+
+        /* ── CONTAINER ── */
+        .container {
+            max-width: 1400px; margin: 0 auto; padding: 20px 60px 80px;
+            position: relative; z-index: 1;
+        }
+
+        /* ── PAGE HEADER ── */
+        .page-header { text-align: center; margin-bottom: 10px; animation: fadeInUp 0.8s ease-out; }
+        .page-header h1 {
+            font-family: 'Playfair Display', serif; font-size: 72px; font-weight: 800;
+            letter-spacing: -2px; line-height: 1;
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--accent) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 15px;
+        }
+        .subtitle { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; }
+        .decorative-line { width: 60px; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 26px auto; }
+
+        /* ── FILTER BAR ── */
+        .filter-bar {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 36px; animation: fadeInUp 0.8s ease-out 0.2s both;
+            flex-wrap: wrap;
+        }
+        .filter-bar-label { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); flex-shrink: 0; }
+        .filter-tab {
+            border: 1px solid var(--divider); background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(8px); border-radius: 50px; padding: 8px 18px;
+            font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;
+            color: var(--charcoal); cursor: pointer; transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .filter-tab:hover, .filter-tab.active {
+            background: linear-gradient(135deg, var(--gold), var(--accent));
+            border-color: transparent; color: white; box-shadow: 0 4px 16px rgba(201,167,112,0.3);
+        }
+
+        /* ── BLOG LAYOUT ── */
+        .blog-layout { animation: fadeInUp 0.8s ease-out 0.35s both; }
+
+        /* ── HERO ARTICLE ── */
+        .hero-article {
+            background: rgba(255,255,255,0.75); backdrop-filter: blur(20px);
+            border: 1px solid var(--divider); border-radius: 24px; overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.06); margin-bottom: 28px; cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); position: relative;
+        }
+        .hero-article:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(201,167,112,0.2); border-color: var(--gold); }
+        .hero-img-wrap { overflow: hidden; }
+        .hero-article .hero-img { width: 100%; height: 360px; object-fit: cover; display: block; transition: transform 0.6s ease; }
+        .hero-article:hover .hero-img { transform: scale(1.04); }
+        .hero-body { padding: 28px 32px 24px; }
+        .article-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+        .cat-pill { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 14px; border-radius: 50px; background: linear-gradient(135deg, var(--gold), var(--accent)); color: white; }
+        .cat-pill.rohani { background: linear-gradient(135deg, #6FA890, #4A8871); }
+        .cat-pill.kepemudaan { background: linear-gradient(135deg, #7A8FBF, #5A6F9F); }
+        .cat-pill.sosial { background: linear-gradient(135deg, #BF7A7A, #9F5A5A); }
+        .cat-pill.pelatihan { background: linear-gradient(135deg, #C9A770, #8B6F47); }
+        .meta-date { font-size: 12px; color: var(--accent); font-weight: 500; }
+        .meta-sep { color: var(--divider); }
+        .meta-views { font-size: 12px; color: var(--accent); }
+        .hero-body h2 { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 800; line-height: 1.2; color: var(--charcoal); margin-bottom: 12px; letter-spacing: -0.5px; }
+        .hero-body p { font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.7; color: var(--accent); margin-bottom: 18px; }
+        .read-more { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); border: none; background: transparent; cursor: pointer; padding: 0; transition: gap 0.3s ease; }
+        .read-more:hover { gap: 14px; }
+
+        /* ── ARTICLE LIST ── */
+        .article-list { display: flex; flex-direction: column; gap: 18px; }
+        .article-card {
+            background: rgba(255,255,255,0.75); backdrop-filter: blur(20px);
+            border: 1px solid var(--divider); border-radius: 18px; overflow: hidden;
+            display: flex; cursor: pointer; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+        }
+        .article-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(201,167,112,0.18); border-color: var(--gold); }
+        .article-card .card-img-wrap { width: 190px; flex-shrink: 0; overflow: hidden; }
+        .article-card .card-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+        .article-card:hover .card-img { transform: scale(1.08); }
+        .article-card .card-body { padding: 20px 24px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
+        .card-body h3 { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 700; line-height: 1.3; color: var(--charcoal); margin-bottom: 8px; }
+        .card-body p { font-family: 'Cormorant Garamond', serif; font-size: 15px; line-height: 1.6; color: var(--accent); margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+        /* ── PAGINATION ── */
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 36px; }
+        .page-btn {
+            width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--divider);
+            background: rgba(255,255,255,0.7); font-size: 13px; font-weight: 600; color: var(--charcoal);
+            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;
+        }
+        .page-btn:hover, .page-btn.active { background: linear-gradient(135deg, var(--gold), var(--accent)); border-color: transparent; color: white; box-shadow: 0 4px 12px rgba(201,167,112,0.3); }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(26,22,20,0.5); backdrop-filter: blur(8px);
+            z-index: 2000; display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.35s ease; padding: 20px;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal-content {
+            background: rgba(255,255,255,0.98); backdrop-filter: blur(30px);
+            border: 1px solid rgba(201,167,112,0.3); border-radius: 28px;
+            max-width: 820px; width: 100%; max-height: 88vh; overflow-y: auto;
+            padding: 0 0 32px; position: relative;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.2);
+            transform: scale(0.9) translateY(30px);
+            transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+        .modal-close {
+            position: absolute; top: 16px; right: 16px; width: 38px; height: 38px; border: none;
+            background: rgba(201,167,112,0.15); border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; color: var(--charcoal); z-index: 10; transition: all 0.3s ease;
+        }
+        .modal-close:hover { background: var(--gold); color: white; transform: rotate(90deg); }
+        .modal-hero-img { width: 100%; height: 260px; object-fit: cover; border-radius: 28px 28px 0 0; display: block; }
+        .modal-body { padding: 28px 36px 0; }
+        .modal-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+        .modal-title { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 800; color: var(--charcoal); line-height: 1.2; margin-bottom: 12px; }
+        .modal-lead { font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.75; color: var(--accent); margin-bottom: 20px; }
+        .modal-divider { height: 1px; background: var(--divider); margin-bottom: 20px; }
+        .modal-text { font-size: 14px; line-height: 1.8; color: var(--charcoal); margin-bottom: 20px; }
+        .modal-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+        .modal-info-box { background: rgba(245,241,235,0.7); border-radius: 14px; padding: 16px 18px; }
+        .modal-info-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
+        .modal-info-val { font-size: 14px; font-weight: 600; color: var(--charcoal); }
+        .modal-gallery { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 24px; }
+        .modal-gallery img { width: 100%; height: 100px; object-fit: cover; border-radius: 12px; }
+
+        /* ── CTA ROW ── */
+        .modal-cta { display: flex; gap: 12px; align-items: center; }
+        .modal-btn {
+            padding: 12px 26px; border: none; border-radius: 50px;
+            font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 600;
+            letter-spacing: 1px; text-transform: uppercase; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .modal-btn-primary { background: linear-gradient(135deg, var(--gold), var(--accent)); color: white; box-shadow: 0 4px 16px rgba(201,167,112,0.3); }
+        .modal-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,167,112,0.4); }
+        .modal-btn-secondary { background: transparent; color: var(--charcoal); border: 2px solid var(--gold); }
+        .modal-btn-secondary:hover { background: var(--gold); color: white; }
+
+        /* ── SHARE PANEL ── */
+        .share-wrapper { position: relative; }
+        .share-panel {
+            position: absolute; bottom: calc(100% + 12px); left: 0;
+            background: white; border: 1px solid rgba(201,167,112,0.25);
+            border-radius: 20px; padding: 14px 16px;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.14);
+            min-width: 260px; z-index: 100;
+            opacity: 0; pointer-events: none;
+            transform: translateY(8px) scale(0.97);
+            transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .share-panel.open { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
+        .share-panel-title {
+            font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--accent); margin-bottom: 10px; padding-bottom: 8px;
+            border-bottom: 1px solid var(--divider);
+        }
+        .share-options { display: flex; flex-direction: column; gap: 2px; }
+        .share-opt {
+            display: flex; align-items: center; gap: 12px;
+            padding: 9px 10px; border-radius: 12px; border: none;
+            background: transparent; width: 100%; text-align: left; cursor: pointer;
+            font-family: 'Montserrat', sans-serif; transition: background 0.2s;
+        }
+        .share-opt:hover { background: rgba(201,167,112,0.1); }
+        .share-opt-icon { width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .share-opt-label { font-size: 13px; font-weight: 600; color: var(--charcoal); display: block; }
+        .share-opt-sub { font-size: 10px; color: var(--accent); display: block; margin-top: 1px; }
+
+        /* ── TOAST ── */
+        .copy-toast {
+            position: fixed; bottom: 30px; left: 50%;
+            transform: translateX(-50%) translateY(16px);
+            background: var(--charcoal); color: white;
+            padding: 12px 24px; border-radius: 50px;
+            font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0.3px;
+            z-index: 9999; opacity: 0; pointer-events: none;
+            transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2); white-space: nowrap;
+        }
+        .copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            body { padding-top: 70px; }
+            .container { padding: 16px 14px 60px; }
+            .page-header { margin-bottom: 4px; }
+            .page-header h1 { font-size: 38px; letter-spacing: -1px; margin-bottom: 8px; }
+            .subtitle { font-size: 12px; letter-spacing: 2px; }
+            .decorative-line { margin: 16px auto; }
+            .filter-bar { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; gap: 8px; margin-bottom: 24px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+            .filter-bar::-webkit-scrollbar { display: none; }
+            .filter-bar-label { display: none; }
+            .filter-tab { padding: 7px 16px; font-size: 11px; }
+            .hero-article { border-radius: 18px; margin-bottom: 16px; }
+            .hero-article .hero-img { height: 200px; }
+            .hero-body { padding: 16px 18px 14px; }
+            .hero-body h2 { font-size: 20px; margin-bottom: 8px; }
+            .hero-body p { font-size: 15px; margin-bottom: 12px; -webkit-line-clamp: 3; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+            .article-meta { gap: 8px; margin-bottom: 8px; }
+            .meta-sep { display: none; }
+            .meta-views { display: none; }
+            .article-list { gap: 14px; }
+            .article-card { flex-direction: column; border-radius: 16px; }
+            .article-card .card-img-wrap { width: 100%; height: 160px; }
+            .article-card .card-body { padding: 14px 16px 14px; }
+            .card-body h3 { font-size: 16px; margin-bottom: 6px; }
+            .card-body p { font-size: 14px; margin-bottom: 10px; -webkit-line-clamp: 2; }
+            .card-footer { gap: 6px; }
+            .meta-views { font-size: 11px; }
+            .read-more { font-size: 10px; }
+            .pagination { gap: 6px; margin-top: 24px; }
+            .page-btn { width: 36px; height: 36px; font-size: 12px; border-radius: 9px; }
+            .modal-overlay { align-items: flex-end; padding: 0; }
+            .modal-content { border-radius: 24px 24px 0 0; max-height: 92vh; width: 100%; max-width: 100%; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94); border: none; border-top: 1px solid rgba(201,167,112,0.2); padding-bottom: env(safe-area-inset-bottom, 20px); }
+            .modal-overlay.active .modal-content { transform: translateY(0); }
+            .modal-content::before { content: ""; display: block; width: 40px; height: 4px; border-radius: 2px; background: rgba(0,0,0,0.15); margin: 12px auto 0; }
+            .modal-close { top: 14px; right: 14px; width: 34px; height: 34px; font-size: 20px; }
+            .modal-hero-img { height: 200px; border-radius: 0; }
+            .modal-body { padding: 18px 18px 0; }
+            .modal-title { font-size: 22px; margin-bottom: 10px; }
+            .modal-lead { font-size: 15px; margin-bottom: 16px; }
+            .modal-text { font-size: 13px; margin-bottom: 18px; }
+            .modal-info-grid { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+            .modal-info-box { padding: 12px 14px; border-radius: 12px; }
+            .modal-info-label { font-size: 9px; }
+            .modal-info-val { font-size: 13px; }
+            .modal-gallery { grid-template-columns: repeat(3,1fr); gap: 6px; margin-bottom: 18px; }
+            .modal-gallery img { height: 76px; border-radius: 10px; }
+            .modal-cta { flex-direction: column; gap: 10px; }
+            .share-wrapper { width: 100%; }
+            .modal-btn { width: 100%; padding: 14px 20px; font-size: 13px; }
+            .share-panel { bottom: calc(100% + 10px); left: 0; right: 0; min-width: unset; width: 100%; border-radius: 18px; }
+            .share-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+            .share-opt { flex-direction: column; align-items: center; text-align: center; padding: 12px 8px; border-radius: 14px; border: 1px solid rgba(201,167,112,0.15); background: rgba(245,241,235,0.5); gap: 8px; }
+            .share-opt:hover { background: rgba(201,167,112,0.12); border-color: var(--gold); }
+            .share-opt-icon { width: 44px; height: 44px; border-radius: 14px; font-size: 22px; }
+            .share-opt-label { font-size: 12px; }
+            .share-opt-sub { font-size: 9.5px; }
+            .copy-toast { bottom: 20px; font-size: 12px; padding: 10px 20px; white-space: normal; max-width: 85%; text-align: center; }
+        }
+
+        @media (max-width: 380px) {
+            .page-header h1 { font-size: 32px; }
+            .hero-article .hero-img { height: 170px; }
+            .hero-body h2 { font-size: 18px; }
+            .article-card .card-img-wrap { height: 140px; }
+            .card-body h3 { font-size: 15px; }
+            .modal-info-grid { grid-template-columns: 1fr; }
+            .modal-gallery { grid-template-columns: repeat(2,1fr); }
+            .share-options { grid-template-columns: 1fr 1fr; }
+        }
+
+        html { scroll-behavior: smooth; }
+        ::selection { background: var(--gold); color: white; }
+        .modal-content::-webkit-scrollbar { width: 6px; }
+        .modal-content::-webkit-scrollbar-track { background: transparent; }
+        .modal-content::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    {% include 'components/navbar.html' with active_page='blog' %}
+
+    <div class="container">
+        <div class="page-header">
+            <div class="subtitle">Informasi &amp; Berita</div>
+            <h1>Event Report</h1>
+            <div class="decorative-line"></div>
+        </div>
+        <div class="filter-bar">
+            <span class="filter-bar-label">Kategori:</span>
+            <button class="filter-tab active" data-cat="semua">Semua</button>
+            <button class="filter-tab" data-cat="rohani">Rohani</button>
+            <button class="filter-tab" data-cat="kepemudaan">Kepemudaan</button>
+            <button class="filter-tab" data-cat="sosial">Sosial</button>
+            <button class="filter-tab" data-cat="pelatihan">Pelatihan</button>
+        </div>
+        <div class="blog-layout">
+            <div class="main-feed">
+                <div id="heroSection"></div>
+                <div class="article-list" id="articleList"></div>
+                <div class="pagination" id="pagination"></div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'components/footer.html' %}
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnOverlay(event)">
+        <div class="modal-content" id="modalContent">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <img class="modal-hero-img" id="modalImg" src="" alt="">
+            <div class="modal-body">
+                <div class="modal-meta" id="modalMeta"></div>
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <p class="modal-lead" id="modalLead"></p>
+                <div class="modal-divider"></div>
+                <p class="modal-text" id="modalText"></p>
+                <div class="modal-info-grid" id="modalInfoGrid"></div>
+                <div class="modal-gallery" id="modalGallery"></div>
+                <div class="modal-cta">
+                    <div class="share-wrapper">
+                        <button class="modal-btn modal-btn-primary" id="shareTrigger" onclick="toggleShare(event)">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                            </svg>
+                            Bagikan Event
+                        </button>
+                        <div class="share-panel" id="sharePanel">
+                            <div class="share-panel-title">Pilih platform</div>
+                            <div class="share-options">
+                                <button class="share-opt" onclick="doShare('whatsapp')">
+                                    <div class="share-opt-icon" style="background:#25D366;color:white;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                    </div>
+                                    <span><span class="share-opt-label">WhatsApp</span><span class="share-opt-sub">Kirim via chat</span></span>
+                                </button>
+                                <button class="share-opt" onclick="doShare('telegram')">
+                                    <div class="share-opt-icon" style="background:#2CA5E0;color:white;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                                    </div>
+                                    <span><span class="share-opt-label">Telegram</span><span class="share-opt-sub">Via Telegram</span></span>
+                                </button>
+                                <button class="share-opt" onclick="doShare('instagram')">
+                                    <div class="share-opt-icon" style="background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:white;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                                    </div>
+                                    <span><span class="share-opt-label">Instagram</span><span class="share-opt-sub">Salin caption</span></span>
+                                </button>
+                                <button class="share-opt" onclick="doShare('copy')">
+                                    <div class="share-opt-icon" style="background:rgba(201,167,112,0.18);color:var(--accent);">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                                    </div>
+                                    <span><span class="share-opt-label">Salin Link</span><span class="share-opt-sub">Copy URL</span></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="copy-toast" id="toast"></div>
+
+    <script src="{% static 'page/js/navbar.js' %}"></script>
+    <script>
+        const events = [
+            { id:1, cat:'rohani', catLabel:'Rohani', badge:'Populer', title:'Retreat Spiritual Pemuda Advent Wilayah 13', date:'12 Agustus 2023', views:540, lead:'Retreat selama tiga hari dua malam yang menghadirkan kedamaian batin dan penguatan iman di tengah alam terbuka Puncak Bogor.', body:'Ratusan pemuda dari seluruh gereja di Wilayah 13 berkumpul dalam momen yang penuh hikmat dan sukacita. Retreat kali ini bertema "Diam dan Ketahuilah" mengundang setiap peserta untuk melepaskan distraksi digital dan sungguh-sungguh berjumpa dengan Tuhan dalam keheningan alam. Sesi renungan pagi dipimpin oleh Pendeta Senior Daniel Sihombing, sementara sesi kelompok kecil difasilitasi oleh para konselor terlatih.', img:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=820&h=460&fit=crop', thumb:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200&h=140&fit=crop', location:'Puncak, Bogor', participants:'320 Peserta', duration:'3 Hari 2 Malam', status:'Terlaksana', gallery:['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop','https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300&h=200&fit=crop','https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=300&h=200&fit=crop'] },
+            { id:2, cat:'kepemudaan', catLabel:'Kepemudaan', badge:'', title:'Seminar Kepemimpinan Muda Kristen di Era Digital', date:'5 Agustus 2023', views:327, lead:'Seminar intensif sehari penuh membekali generasi muda dengan kepemimpinan berbasis nilai kristiani di tengah gempuran era digital.', body:'Menghadirkan tiga pembicara nasional, seminar ini membahas topik navigasi media sosial secara positif, pembangunan karakter di lingkungan digital, dan kepemimpinan pelayanan yang otentik.', img:'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=820&h=460&fit=crop', thumb:'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=200&h=140&fit=crop', location:'Aula GPI Jakarta Selatan', participants:'210 Peserta', duration:'1 Hari', status:'Terlaksana', gallery:['https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=300&h=200&fit=crop','https://images.unsplash.com/photo-1531482615713-2afd69097998?w=300&h=200&fit=crop','https://images.unsplash.com/photo-1560523159-4a9692d222f8?w=300&h=200&fit=crop'] },
+            { id:3, cat:'sosial', catLabel:'Sosial', badge:'', title:'Bakti Sosial & Pembagian Sembako di Cilincing', date:'28 Juli 2023', views:260, lead:'Aksi nyata pelayanan masyarakat: ratusan paket sembako dan layanan kesehatan gratis untuk warga kurang mampu di Cilincing, Jakarta Utara.', body:'Dengan semangat "Melayani Bukan Dilayani", tim pemuda Wilayah 13 bergerak ke Cilincing membawa 500 paket sembako, layanan pemeriksaan tekanan darah, konsultasi gizi, dan pemeriksaan mata gratis.', img:'https://images.unsplash.com/photo-1593113616828-6f22bca04804?w=820&h=460&fit=crop', thumb:'https://images.unsplash.com/photo-1593113616828-6f22bca04804?w=200&h=140&fit=crop', location:'Cilincing, Jakarta Utara', participants:'80 Relawan', duration:'1 Hari', status:'Terlaksana', gallery:['https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=300&h=200&fit=crop','https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=300&h=200&fit=crop','https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=300&h=200&fit=crop'] },
+            { id:4, cat:'pelatihan', catLabel:'Pelatihan', badge:'Baru', title:'Workshop Desain & Konten Kreatif untuk Pelayanan', date:'15 Juli 2023', views:174, lead:'Kelas hands-on dua hari mengajarkan Canva Pro, editing foto, dan strategi konten media sosial untuk mendukung pelayanan modern.', body:'Workshop intensif yang dipandu oleh desainer profesional dari komunitas kristen digital. Peserta mempraktikkan langsung pembuatan konten ibadah, poster event, dan template media sosial yang siap pakai.', img:'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=820&h=460&fit=crop', thumb:'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=200&h=140&fit=crop', location:'Cowork Space, BSD City', participants:'55 Peserta', duration:'2 Hari', status:'Terlaksana', gallery:['https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=300&h=200&fit=crop','https://images.unsplash.com/photo-1587440871875-191322ee64b0?w=300&h=200&fit=crop','https://images.unsplash.com/photo-1542744094-24638eff58bb?w=300&h=200&fit=crop'] },
+            { id:5, cat:'rohani', catLabel:'Rohani', badge:'', title:'Konser Pujian & Penyembahan "Satu Suara"', date:'2 Juli 2023', views:412, lead:'Malam pujian yang menggetarkan hati: ratusan suara bersatu memuliakan Tuhan dalam balutan aransemen musik kontemporer dan tradisional.', body:'Konser tahunan "Satu Suara" kembali hadir mempertemukan paduan suara dari 14 gereja anggota Wilayah 13. Penampilan memukau dengan repertoar yang menyentuh mulai dari himne klasik hingga lagu pujian kontemporer.', img:'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=820&h=460&fit=crop', thumb:'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=200&h=140&fit=crop', location:'Aula Besar GMAHK Pusat', participants:'600+ Penonton', duration:'3 Jam', status:'Terlaksana', gallery:['https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=300&h=200&fit=crop','https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=300&h=200&fit=crop','https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=200&fit=crop'] },
+            { id:6, cat:'kepemudaan', catLabel:'Kepemudaan', badge:'', title:'Pekan Olahraga & Persahabatan Antar Jemaat 2023', date:'18 Juni 2023', views:289, lead:'Festival olahraga dan keakraban yang mempererat tali persaudaraan antar pemuda dari gereja-gereja di seluruh Wilayah 13.', body:'Selama dua hari, lapangan olahraga dipenuhi semangat kompetisi yang sehat dan sportif. Cabang yang dipertandingkan meliputi futsal, bola voli, bulu tangkis, dan catur.', img:'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=820&h=460&fit=crop', thumb:'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=140&fit=crop', location:'Lapangan Olahraga Cibubur', participants:'250 Peserta', duration:'2 Hari 1 Malam', status:'Terlaksana', gallery:['https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=300&h=200&fit=crop','https://images.unsplash.com/photo-1576085898323-218337e3e43c?w=300&h=200&fit=crop','https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=300&h=200&fit=crop'] }
+        ];
+
+        let currentCat='semua', currentModal=null, currentPage=1;
+        const ITEMS_PER_PAGE=5;
+
+        function toggleShare(e){ e.stopPropagation(); document.getElementById('sharePanel').classList.toggle('open'); }
+        function closeShare(){ document.getElementById('sharePanel').classList.remove('open'); }
+
+        function buildText(){
+            if(!currentModal) return '';
+            return `🙏 *${currentModal.title}*\n📅 ${currentModal.date}\n📍 ${currentModal.location}\n\n${currentModal.lead}\n\n— Pemuda Advent Wilayah 13`;
+        }
+
+        function doShare(platform){
+            const url=window.location.href, text=buildText();
+            closeShare();
+            if(platform==='whatsapp'){ window.open(`https://wa.me/?text=${encodeURIComponent(text+'\n\n🔗 '+url)}`,'_blank'); }
+            else if(platform==='telegram'){ window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`,'_blank'); }
+            else if(platform==='instagram'){ navigator.clipboard.writeText(text+'\n\n🔗 '+url).then(()=>toast('📋 Caption disalin! Tempel di Instagram kamu.')).catch(()=>toast('Salin teks secara manual ya!')); }
+            else if(platform==='copy'){ navigator.clipboard.writeText(url).then(()=>toast('✓ Link berhasil disalin!')).catch(()=>{ fallbackCopy(url); toast('✓ Link berhasil disalin!'); }); }
+        }
+        function fallbackCopy(t){ const el=document.createElement('textarea'); el.value=t; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); }
+        function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),3000); }
+
+        document.addEventListener('click',e=>{
+            const panel=document.getElementById('sharePanel'), trigger=document.getElementById('shareTrigger');
+            if(panel && !panel.contains(e.target) && !trigger.contains(e.target)) closeShare();
+        });
+
+        function filteredEvents(){ return events.filter(e=>currentCat==='semua'||e.cat===currentCat); }
+        function filterCat(cat){
+            currentCat=cat; currentPage=1;
+            document.querySelectorAll('.filter-tab').forEach(t=>t.classList.toggle('active',t.dataset.cat===cat));
+            renderFeed();
+        }
+
+        function pill(cat){ return 'cat-pill '+(({rohani:'rohani',kepemudaan:'kepemudaan',sosial:'sosial',pelatihan:'pelatihan'})[cat]||''); }
+
+        function renderFeed(){
+            const list=filteredEvents();
+            const heroEl=document.getElementById('heroSection'), listEl=document.getElementById('articleList'), pagEl=document.getElementById('pagination');
+            if(!list.length){ heroEl.innerHTML=''; listEl.innerHTML='<p style="color:var(--accent);text-align:center;padding:40px 0;font-family:\'Cormorant Garamond\',serif;font-size:18px;">Tidak ada artikel ditemukan.</p>'; pagEl.innerHTML=''; return; }
+            const rest=list.slice(1);
+            const totalPages=Math.ceil(rest.length/ITEMS_PER_PAGE)||1;
+            currentPage=Math.min(currentPage,totalPages);
+            const pageItems=rest.slice((currentPage-1)*ITEMS_PER_PAGE,currentPage*ITEMS_PER_PAGE);
+            const hero=list[0];
+            heroEl.innerHTML=`
+                <div class="hero-article" onclick="openModal(${hero.id})">
+                    ${hero.badge?`<div style="position:absolute;top:16px;right:16px;z-index:10;background:linear-gradient(135deg,var(--gold),var(--accent));color:white;padding:6px 16px;border-radius:8px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;box-shadow:0 4px 16px rgba(201,167,112,0.3)">${hero.badge}</div>`:''}
+                    <div class="hero-img-wrap"><img class="hero-img" src="${hero.img}" alt="${hero.title}" loading="lazy"></div>
+                    <div class="hero-body">
+                        <div class="article-meta">
+                            <span class="${pill(hero.cat)}">${hero.catLabel}</span>
+                            <span class="meta-date">${hero.date}</span>
+                            <span class="meta-sep">|</span>
+                            
+                        </div>
+                        <h2>${hero.title}</h2>
+                        <p>${hero.lead}</p>
+                        <button class="read-more">Baca Selengkapnya <span>→</span></button>
+                    </div>
+                </div>`;
+            listEl.innerHTML=pageItems.map(e=>`
+                <div class="article-card" onclick="openModal(${e.id})">
+                    <div class="card-img-wrap"><img class="card-img" src="${e.thumb}" alt="${e.title}" loading="lazy"></div>
+                    <div class="card-body">
+                        <div>
+                            <div class="article-meta" style="margin-bottom:6px">
+                                <span class="${pill(e.cat)}">${e.catLabel}</span>
+                                <span class="meta-date">${e.date}</span>
+                            </div>
+                            <h3>${e.title}</h3>
+                            <p>${e.lead}</p>
+                        </div>
+                        <div class="card-footer">
+                            
+                            <button class="read-more" style="font-size:11px">Baca <span>→</span></button>
+                        </div>
+                    </div>
+                </div>`).join('');
+            if(totalPages<=1){pagEl.innerHTML='';return;}
+            let p=`<button class="page-btn" onclick="changePage(${currentPage-1})" ${currentPage===1?'disabled style="opacity:0.4"':''}>‹</button>`;
+            for(let i=1;i<=totalPages;i++) p+=`<button class="page-btn ${i===currentPage?'active':''}" onclick="changePage(${i})">${i}</button>`;
+            p+=`<button class="page-btn" onclick="changePage(${currentPage+1})" ${currentPage===totalPages?'disabled style="opacity:0.4"':''}>›</button>`;
+            pagEl.innerHTML=p;
+        }
+
+        function changePage(p){
+            const total=Math.ceil(filteredEvents().slice(1).length/ITEMS_PER_PAGE)||1;
+            if(p<1||p>total) return;
+            currentPage=p; renderFeed(); window.scrollTo({top:0,behavior:'smooth'});
+        }
+
+        function openModal(id){
+            const e=events.find(x=>x.id===id); if(!e) return;
+            currentModal=e; closeShare();
+            document.getElementById('modalImg').src=e.img;
+            document.getElementById('modalImg').alt=e.title;
+            document.getElementById('modalMeta').innerHTML=`<span class="${pill(e.cat)}">${e.catLabel}</span><span class="meta-date">${e.date}</span><span class="meta-sep">|</span>`;
+            document.getElementById('modalTitle').textContent=e.title;
+            document.getElementById('modalLead').textContent=e.lead;
+            document.getElementById('modalText').textContent=e.body;
+            document.getElementById('modalInfoGrid').innerHTML=`
+                <div class="modal-info-box"><div class="modal-info-label">Lokasi</div><div class="modal-info-val">📍 ${e.location}</div></div>
+                <div class="modal-info-box"><div class="modal-info-label">Peserta</div><div class="modal-info-val">👥 ${e.participants}</div></div>
+                <div class="modal-info-box"><div class="modal-info-label">Durasi</div><div class="modal-info-val">⏱ ${e.duration}</div></div>
+                <div class="modal-info-box"><div class="modal-info-label">Status</div><div class="modal-info-val">✅ ${e.status}</div></div>`;
+            document.getElementById('modalGallery').innerHTML=e.gallery.map(g=>`<img src="${g}" loading="lazy" alt="Gallery">`).join('');
+            document.getElementById('modalOverlay').classList.add('active');
+            document.body.style.overflow='hidden';
+        }
+        function closeModal(){ closeShare(); document.getElementById('modalOverlay').classList.remove('active'); document.body.style.overflow=''; currentModal=null; }
+        function closeModalOnOverlay(ev){ if(ev.target===document.getElementById('modalOverlay')) closeModal(); }
+        document.addEventListener('keydown',e=>{ if(e.key==='Escape'){closeShare();closeModal();} });
+
+        document.querySelectorAll('.filter-tab').forEach(t=>t.addEventListener('click',()=>filterCat(t.dataset.cat)));
+        document.addEventListener('DOMContentLoaded',()=>renderFeed());
+    </script>
+</body>
+</html>

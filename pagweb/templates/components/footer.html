@@ -1,0 +1,31 @@
+{% load static %}
+<footer class="site-footer">
+    <p>© 2025 <a href="{% url 'home' %}">Pemuda Advent Wilayah 13</a>. All rights reserved.</p>
+</footer>
+
+<style>
+.site-footer {
+    position: relative; z-index: 1;
+    background: rgba(26, 22, 20, 0.65); /* Dark dengan transparansi 65% */
+    backdrop-filter: blur(10px); /* Efek blur di belakang */
+    -webkit-backdrop-filter: blur(10px);
+    padding: 22px 60px;
+    text-align: center;
+    border-top: 1px solid rgba(201, 167, 112, 0.2); /* Border gold tipis */
+}
+.site-footer p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px; font-weight: 400;
+    color: rgb(255, 255, 255); letter-spacing: 0.3px;
+}
+.site-footer p a {
+    color: var(--gold); text-decoration: none; font-weight: 500;
+    transition: opacity 0.3s ease;
+}
+.site-footer p a:hover { opacity: 0.75; }
+
+@media (max-width: 768px) {
+    .site-footer { padding: 18px 16px; }
+    .site-footer p { font-size: 12px; }
+}
+</style>

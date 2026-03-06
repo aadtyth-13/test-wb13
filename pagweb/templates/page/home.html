@@ -1,0 +1,415 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home — Pemuda Advent Wilayah 13</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800;900&family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* ── CSS VARIABLES — wajib ada di setiap halaman ── */
+        :root {
+            --gold:       #C9A770;
+            --dark:       #1A1614;
+            --cream:      #F5F1EB;
+            --charcoal:   #2C2823;
+            --accent:     #8B6F47;
+            --light-gold: #E4D4BA;
+        }
+
+        html { scroll-behavior: smooth; }
+        ::selection { background: var(--gold); color: white; }
+
+        body {
+            background: linear-gradient(135deg, var(--cream) 0%, #EFE9E1 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            font-family: 'Montserrat', sans-serif;
+            position: relative;
+            overflow-x: hidden;
+            padding-top: 90px; /* sesuai tinggi navbar */
+        }
+        body::before {
+            content: "";
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(201,167,112,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139,111,71,0.06)  0%, transparent 50%);
+            pointer-events: none; z-index: 0;
+        }
+        body::after {
+            content: "";
+            position: fixed; right: 0; top: 0; width: 3px; height: 100%;
+            background: linear-gradient(180deg, var(--gold) 0%, var(--accent) 100%);
+            z-index: 100;
+            box-shadow: -2px 0 20px rgba(201,167,112,0.3);
+        }
+
+        .container {
+            max-width: 1400px; margin: 0 auto; padding: 0 60px;
+            position: relative; z-index: 1;
+        }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── HERO ── */
+        .hero {
+            position: relative; width: 100%; min-height: 92vh;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; animation: fadeInUp 0.8s ease-out;
+        }
+        .hero-bg {
+            position: absolute; inset: 0;
+            background-image: url("{% static 'resource/img/pag.jpeg' %}");
+            background-size: cover; background-position: center center;
+            background-repeat: no-repeat; z-index: 0;
+            transition: transform 8s ease;
+        }
+        .hero:hover .hero-bg { transform: scale(1.04); }
+        .hero-overlay {
+            position: absolute; inset: 0; z-index: 1;
+            background: linear-gradient(
+                to bottom,
+                rgba(245,241,235,0.55) 0%,
+                rgba(245,241,235,0.30) 30%,
+                rgba(26,22,20,0.45)    70%,
+                rgba(26,22,20,0.65)    100%
+            );
+        }
+        .hero-content {
+            position: relative; z-index: 2; text-align: center;
+            padding: 60px 40px 100px; width: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: space-between;
+            min-height: 92vh;
+        }
+        .hero-top {}
+        .hero-bottom { padding-bottom: 40px; }
+        .hero-icons {
+            display: flex; justify-content: center; align-items: center; gap: 40px;
+            margin-bottom: 48px; animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+        .hero-icon {
+            width: 80px; height: 80px; object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
+            transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .hero-iconi {
+            width: 120px; height: 120px; object-fit: contain;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+            transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .hero-icon:hover, .hero-iconi:hover { transform: scale(1.1) rotate(5deg); }
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 60px; font-weight: 900; letter-spacing: 8px; line-height: 1;
+            color: white;
+            text-shadow: 0 2px 0 rgba(0,0,0,0.15), 0 6px 30px rgba(0,0,0,0.45);
+            margin-bottom: -16px; animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+        .hero-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 30px; font-weight: 600; letter-spacing: -1px;
+            color: rgba(255,255,255,0.95);
+            text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+            margin-bottom: -20px;
+        }
+        .hero-subtitle .highlight {
+            color: var(--gold); font-weight: 700; font-size: 44px;
+            text-shadow: 0 2px 20px rgba(201,167,112,0.7);
+        }
+
+        /* ── ABOUT ── */
+        .about-full-section { padding: 80px 0; animation: fadeInUp 0.8s ease-out 0.8s both; }
+        .about-hero { text-align: center; padding: 3rem 2rem 4rem; max-width: 900px; margin: 0 auto; }
+        .about-hero-subtitle {
+            font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 400;
+            color: var(--accent); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 1rem;
+        }
+        .about-hero-title {
+            font-family: 'Playfair Display', serif; font-size: 72px; font-weight: 800;
+            letter-spacing: -2px; line-height: 1;
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--accent) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; margin-bottom: 1.5rem;
+        }
+        .about-hero-divider {
+            width: 60px; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 30px auto 50px;
+        }
+        .intro-section { max-width: 1000px; margin: 0 auto 4rem; }
+        .intro-text { font-size: 18px; line-height: 1.9; color: var(--accent); text-align: center; font-weight: 400; }
+        .intro-text strong { color: var(--charcoal); font-weight: 600; }
+        .main-about { max-width: 900px; margin: 0 auto 6rem; }
+        .main-about h2 { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--charcoal); margin-bottom: 2rem; line-height: 1.4; letter-spacing: 0.5px; }
+        .main-about p  { color: var(--accent); font-size: 15px; line-height: 1.9; margin-bottom: 1.5rem; }
+
+        .section-title {
+            font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 800;
+            letter-spacing: -1px; line-height: 1.2;
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--accent) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; margin-bottom: 3rem; text-align: center;
+        }
+
+        /* ── WHY ── */
+        .why-section { margin-bottom: 6rem; }
+        .why-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 35px; margin-top: 3rem; }
+        .why-card {
+            background: rgba(255,255,255,0.7); backdrop-filter: blur(20px);
+            border: 1px solid rgba(201,167,112,0.2); border-radius: 24px;
+            padding: 45px 35px; position: relative;
+            transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            text-align: center; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+        }
+        .why-card::before {
+            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(201,167,112,0.1) 0%, transparent 70%);
+            opacity: 0; transition: opacity 0.4s;
+        }
+        .why-card:hover::before { opacity: 1; }
+        .why-card:hover { transform: translateY(-8px); box-shadow: 0 16px 48px rgba(201,167,112,0.2); border-color: var(--gold); }
+        .why-icon { font-size: 48px; margin-bottom: 1.5rem; }
+        .why-card h3 { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; margin-bottom: 1rem; color: var(--charcoal); letter-spacing: 0.5px; }
+        .why-card p  { color: var(--accent); line-height: 1.8; font-size: 15px; }
+
+        /* ── SERVICES ── */
+        .services-detailed { max-width: 1000px; margin: 0 auto 6rem; }
+        .service-item {
+            display: grid; grid-template-columns: 80px 1fr; gap: 2rem;
+            margin-bottom: 3rem; padding-bottom: 3rem;
+            border-bottom: 1px solid rgba(201,167,112,0.2);
+        }
+        .service-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .service-number {
+            width: 70px; height: 70px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--accent) 100%);
+            border-radius: 16px; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 24px; font-weight: 600;
+            font-family: 'Playfair Display', serif;
+            box-shadow: 0 4px 16px rgba(201,167,112,0.25);
+        }
+        .service-content h3 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--charcoal); margin-bottom: 1rem; letter-spacing: 0.5px; }
+        .service-content p  { color: var(--accent); line-height: 1.9; font-size: 15px; }
+
+        /* ── MISSION ── */
+        .mission-section {
+            background: rgba(255,255,255,0.7); backdrop-filter: blur(20px);
+            border: 1px solid rgba(201,167,112,0.2); padding: 4rem; border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08); margin-bottom: 6rem;
+        }
+        .mission-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+        .mission-item h3 {
+            font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700;
+            color: var(--charcoal); margin-bottom: 1.5rem;
+            display: flex; align-items: center; gap: 1rem; letter-spacing: 0.5px;
+        }
+        .mission-number {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--accent) 100%);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 20px; flex-shrink: 0;
+            box-shadow: 0 4px 16px rgba(201,167,112,0.25);
+        }
+        .mission-item p { color: var(--accent); line-height: 1.8; font-size: 15px; }
+
+        /* ── STATS ── */
+        .stats-section { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-bottom: 6rem; }
+        .stat-card {
+            text-align: center; padding: 2.5rem 2rem;
+            background: rgba(255,255,255,0.7); backdrop-filter: blur(20px);
+            border: 1px solid rgba(201,167,112,0.2); border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.06); transition: all 0.3s ease;
+        }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 12px 40px rgba(201,167,112,0.15); border-color: var(--gold); }
+        .stat-number { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 800; color: var(--gold); margin-bottom: 0.5rem; }
+        .stat-label  { color: var(--accent); font-size: 14px; font-weight: 500; }
+
+        /* ── CTA ── */
+        .cta-section {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--accent) 100%);
+            padding: 4rem; border-radius: 24px; text-align: center; color: white;
+            box-shadow: 0 12px 40px rgba(201,167,112,0.3); margin-bottom: 6rem;
+        }
+        .cta-section h2 { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 700; margin-bottom: 1rem; }
+        .cta-section p  { font-size: 16px; margin-bottom: 2rem; opacity: 0.95; line-height: 1.6; }
+        .cta-button {
+            background: white; color: var(--charcoal); padding: 15px 40px; border-radius: 50px;
+            text-decoration: none; font-weight: 600; display: inline-block;
+            transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            font-size: 14px; letter-spacing: 1px; text-transform: uppercase;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        .cta-button:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.25); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 968px) {
+            body { padding-top: 80px; }
+            .container { padding: 0 30px; }
+            .hero { min-height: 70vh; }
+            .hero-title { font-size: 44px; }
+            .hero-subtitle { font-size: 24px; }
+            .hero-subtitle .highlight { font-size: 32px; }
+            .hero-icons { gap: 25px; }
+            .hero-icon  { width: 60px; height: 60px; }
+            .hero-iconi { width: 90px; height: 90px; }
+            .hero-content { padding: 60px 24px; }
+            .about-hero-title { font-size: 48px; }
+            .section-title { font-size: 36px; }
+            .mission-grid { grid-template-columns: 1fr; gap: 3rem; }
+            .why-grid { grid-template-columns: 1fr; }
+            .stats-section { grid-template-columns: repeat(2, 1fr); }
+            .service-item { grid-template-columns: 1fr; gap: 1.5rem; }
+        }
+        @media (max-width: 768px) {
+            .hero-title, .about-hero-title { font-size: 36px; }
+            .section-title { font-size: 28px; }
+            .stats-section { grid-template-columns: 1fr; }
+            .cta-section h2 { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+
+    {% include 'components/navbar.html' with active_page='home' %}
+
+    <!-- ── HERO ── -->
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-top">
+                <div class="hero-icons"></div>
+            </div>
+            <div class="hero-bottom">
+                <h1 class="hero-title">SELAMAT DATANG<br>DI PAG</h1>
+                <h2 class="hero-subtitle">Pemuda Advent Gabungan Wilayah <span class="highlight">13</span></h2>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── ABOUT ── -->
+    <section class="about-full-section" id="about">
+        <div class="container">
+            <div class="about-hero">
+                <div class="about-hero-subtitle">Mengenal Kami Lebih Dekat</div>
+                <h1 class="about-hero-title">About Us</h1>
+                <div class="about-hero-divider"></div>
+            </div>
+
+            <section class="intro-section">
+                <p class="intro-text">
+                    <strong>PAG Wilayah 13</strong> adalah komunitas Pemuda Advent di DKI Jakarta (Wilayah 13) yang berakar dari
+                    perjalanan panjang pelayanan pemuda Advent di Indonesia. Dari gerakan kepemudaan yang mulai terorganisir
+                    sejak <strong>1930</strong>, kami melanjutkan semangat yang sama, bertumbuh dalam iman, saling menguatkan,
+                    dan menghadirkan pelayanan yang relevan bagi gereja serta lingkungan sekitar.
+                    <br><br>
+                    Di sini, kami mau <strong>berani tampil beda</strong>: bukan sekadar kumpul, tapi menjadi komunitas yang
+                    bertanggung jawab membangun <strong>spiritualitas</strong>, <strong>kepemimpinan</strong>,
+                    <strong>kreativitas</strong>, dan aksi pelayanan yang nyata untuk sesama Advent maupun sahabat
+                    <strong>Non-Advent</strong>.
+                </p>
+            </section>
+
+            <section class="main-about">
+                <h2>Dampak yang Ingin Kami Hadirkan di Wilayah 13</h2>
+                <p>PAG 13 hadir untuk menolong pemuda bukan hanya "aktif kegiatan", tapi benar-benar <strong>bertumbuh</strong> di karakter, iman, dan kemampuan melayani. Kami percaya pemuda yang kuat akan menguatkan gereja, dan gereja yang hangat akan menguatkan kota.</p>
+                <p>Program kami beragam: pembinaan rohani, pelatihan kepemimpinan, mentoring, workshop kreativitas, sampai pengembangan media digital untuk pelayanan. Semuanya dirancang supaya pemuda punya ruang aman untuk belajar, mencoba, gagal, bangkit, lalu melayani dengan lebih matang.</p>
+                <p>Dengan pendekatan yang <strong>inovatif</strong> namun tetap berakar pada nilai iman, kami ingin PAG 13 menjadi rumah bagi pemuda yang mau bertumbuh, dan jembatan berkat untuk masyarakat di sekitar kita.</p>
+            </section>
+
+            <section class="why-section">
+                <h2 class="section-title">Kenapa Harus PAG Wilayah 13?</h2>
+                <div class="why-grid">
+                    <div class="why-card">
+                        <div class="why-icon">👥</div>
+                        <h3>Komunitas yang Peduli</h3>
+                        <p>Di PAG 13, kamu nggak jalan sendiri. Kita belajar bareng, saling jaga, dan saling dorong supaya tetap bertumbuh dalam iman dan karakter.</p>
+                    </div>
+                    <div class="why-card">
+                        <div class="why-icon">🎯</div>
+                        <h3>Arah yang Jelas</h3>
+                        <p>Setiap program punya tujuan yang rapi bukan cuma ramai sesaat. Dari awal kita jelasin alurnya, supaya semua bisa ikut terlibat dan berkembang bersama.</p>
+                    </div>
+                    <div class="why-card">
+                        <div class="why-icon">🤝</div>
+                        <h3>Kolaborasi yang Solid</h3>
+                        <p>Kita kerja sebagai tim. Setiap kegiatan ditangani bareng dengan pembagian peran yang jelas, supaya pelayanan terasa ringan, rapi, dan berdampak.</p>
+                    </div>
+                    <div class="why-card">
+                        <div class="why-icon">💬</div>
+                        <h3>Pendampingan yang Dekat</h3>
+                        <p>Butuh teman cerita, arahan rohani, atau dukungan pelayanan? Kita berusaha hadir. Bukan cuma saat acara tapi juga dalam prosesnya.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="services-detailed">
+                <h2 class="section-title">Apa yang Kami Lakukan?</h2>
+                <div class="service-item">
+                    <div class="service-number">01</div>
+                    <div class="service-content">
+                        <h3>Menguatkan Spiritualitas yang Nyata</h3>
+                        <p>Kami membantu pemuda membangun hubungan yang lebih dekat dengan Tuhan melalui pembinaan rohani, mentoring, konsultasi, pelatihan kepemimpinan, pembentukan karakter, serta ruang belajar kreatif yang mendukung pelayanan.</p>
+                    </div>
+                </div>
+                <div class="service-item">
+                    <div class="service-number">02</div>
+                    <div class="service-content">
+                        <h3>Bergerak dengan Data &amp; Evaluasi</h3>
+                        <p>Kami belajar untuk tidak asal jalan. Setiap program dievaluasi supaya makin tepat sasaran: memahami kebutuhan pemuda, mengukur efektivitas kegiatan, lalu menyusun langkah yang lebih relevan untuk gereja dan komunitas.</p>
+                    </div>
+                </div>
+                <div class="service-item">
+                    <div class="service-number">03</div>
+                    <div class="service-content">
+                        <h3>Kreatif, Relevan, dan Menjangkau</h3>
+                        <p>Di era digital, pelayanan perlu bahasa yang dimengerti generasi sekarang. Kami mendorong program kreatif termasuk media sosial agar pesan kebaikan bisa menjangkau lebih luas, melibatkan lebih banyak pemuda, dan tetap berakar pada nilai iman.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mission-section">
+                <div class="mission-grid">
+                    <div class="mission-item">
+                        <h3><span class="mission-number">V</span>Visi</h3>
+                        <p>Menjadi generasi pemuda Advent yang beriman, berkarakter, dan berdampak, yang mampu menjadi terang dan garam bagi dunia melalui pelayanan yang transformatif dan inovatif.</p>
+                    </div>
+                    <div class="mission-item">
+                        <h3><span class="mission-number">M</span>Misi</h3>
+                        <p>Menguatkan pemuda dalam kerohanian, mengembangkan talenta dan kepemimpinan, membangun komunitas yang peduli, serta menghadirkan program pelayanan yang menjangkau bukan hanya untuk Advent, tetapi juga untuk sahabat non-Advent di sekitar kita.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="stats-section">
+                <div class="stat-card"><div class="stat-number">200+</div><div class="stat-label">Anggota Aktif</div></div>
+                <div class="stat-card"><div class="stat-number">8</div><div class="stat-label">Gereja</div></div>
+                <div class="stat-card"><div class="stat-number">12+</div><div class="stat-label">Program Tahunan</div></div>
+                <div class="stat-card"><div class="stat-number">7+</div><div class="stat-label">Tahun Melayani</div></div>
+            </section>
+
+            <section class="cta-section">
+                <h2>Yuk, Bertumbuh &amp; Berdampak Bareng</h2>
+                <p>Kalau kamu rindu punya komunitas yang sehat, seru, dan tetap berakar pada iman. PAG 13 siap jalan bareng kamu. Mari tumbuh, melayani, dan jadi berkat untuk gereja serta lingkungan kita.</p>
+                <a href="{% url 'request' %}" class="cta-button">Gabung / Hubungi Kami</a>
+            </section>
+        </div>
+    </section>
+
+    {% include 'components/footer.html' %}
+
+    <!-- navbar.js — handle scroll hide & mobile menu -->
+    <script src="{% static 'page/js/navbar.js' %}"></script>
+
+</body>
+</html>
